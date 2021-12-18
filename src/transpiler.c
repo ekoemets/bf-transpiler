@@ -3,87 +3,9 @@
 #include "bf_node.h"
 #include "transpiler.h"
 
-static void print_printchar(FILE *out) {
-    char *printchar =
-        "; Outputs 1 char from address in EAX to STDOUT\n"
-        "putchar:\n"
-        "    ; Save registers that we modify\n"
-        "    push    edx\n"
-        "    push    ecx\n"
-        "    push    ebx\n"
-        "    push    eax\n"
-        "    ; Output 1 char from EAX address\n"
-        "    mov     ecx, eax \n"
-        "    mov     edx, 1\n"
-        "    mov     ebx, 1\n"
-        "    mov     eax, 4\n"
-        "    int     80h\n"
-        "    ; Restore registers that we modified\n"
-        "    pop     eax\n"
-        "    pop     ebx\n"
-        "    pop     ecx\n"
-        "    pop     edx\n"
-        "    ret\n";
-    fprintf(out, printchar);
-}
-
-static void print_getchar(FILE* out) {
-    char *getchar =
-        "; Reads one char to address in EAX from STDIN and clears STDIN\n"
-        "getchar:\n"
-        "    ; Save registers that we modify\n"
-        "    push    edx\n"
-        "    push    ecx\n"
-        "    push    ebx\n"
-        "    push    eax\n"
-        "    ; Read 1 char from STDIN\n"
-        "    mov     ecx, eax\n"
-        "    mov     edx, 1\n"
-        "    mov     ebx, 0\n"
-        "    mov     eax, 3\n"
-        "    int     80h\n"
-        "    ; Restore registers that we modified\n"
-        "    pop     eax\n"
-        "    pop     ebx\n"
-        "    pop     ecx\n"
-        "    pop     edx\n"
-        "    ret\n\n"
-        "clear_stdin:\n"
-        "    push   eax\n"
-        "    push   eax\n"
-        "    mov    eax, esp\n"
-        "clear_next:\n"
-        "    call   getchar\n"
-        "    cmp    byte [eax], 0Ah\n"
-        "    jz     finished\n"
-        "    cmp    byte [eax], -1\n"
-        "    jz     finished\n"
-        "    jmp    clear_next\n"
-        "finished:\n"
-        "    pop    eax\n"
-        "    pop    eax\n"
-        "    ret\n";
-    fprintf(out, getchar);
-}
-
-static void print_quit(FILE* out) {
-    char *quit =
-        "; Exits with code from EAX\n"
-        "quit:\n"
-        "    mov     ebx, eax\n"
-        "    mov     eax, 1\n"
-        "    int     80h\n"
-        "    ret\n";
-    fprintf(out, quit);
-}
-
 void transpile_bf(struct List *bf_node_list, FILE* out)
 {
-
-    print_printchar(out);
-    print_getchar(out);
-    print_quit(out);
-
+    fprintf(out, "%%include  'functions.asm'\n");
     fprintf(out, "SECTION .bss\n");
     fprintf(out, "memory: resb 30000\n");
 

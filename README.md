@@ -1,6 +1,6 @@
 ## Description
 The objective of this project was to write a program that could interpret or
-transpile to NASM, programs written in Brainfuck language.
+transpile to NASM programs written in the Brainfuck language.
 
 This program works by parsing each character into intermediate node and creates a list from those. That makes it easy to interpret or transpile the generated node list instead of parsing the inital program multiple times. Also this allows the program to do some very
 simple optimizations like joining together consecutive value increment or decrement operations and also consecutive move operations.
@@ -39,6 +39,7 @@ There is also included a shell script that can be used to compile the generated 
 ./build_nasm.sh hello_world.asm
 ./hello_world
 ```
+Building the asm program requires functions.asm file that is included in ./asm directory. If you want to compile the program without using the provided shell script then this file has to be included in the nasm search directory. Additional directories can be specified with the -i option.
 
 ## Building
 ```
